@@ -1,0 +1,231 @@
+--------------------------------------------------------------------INSERT FROM--------------------------------------------------------------------------
+
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form action="insertservlet" method="post">
+            
+            roll : <input type="number" name="roll"/>
+            <br><br>
+            name : <input type="text" name="name"/>
+            <br><br>
+            course : <input type="text" name="course"/>
+            <br><br>
+            gender : <input type="text" name="gender"/>
+            
+            <br><br>
+            
+            <input type="submit" value="submit">
+            <br>
+            <br>
+            
+            <a href="update.html">UPDATE</a>
+            <a href="delete.html">DELETE</a>
+            
+        </form>
+            
+    </body>
+</html>
+
+
+-------------------------------------DELETE--------------------------
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form action="insertservlet" method="post">
+            
+            roll : <input type="number" name="roll"/>
+            <br><br>
+            name : <input type="text" name="name"/>
+            <br><br>
+            course : <input type="text" name="course"/>
+            <br><br>
+            gender : <input type="text" name="gender"/>
+            
+            <br><br>
+            
+            <input type="submit" value="submit">
+            <br>
+            <br>
+            
+            <a href="update.html">UPDATE</a>
+            <a href="delete.html">DELETE</a>
+            
+        </form>
+            
+    </body>
+</html>
+
+-----------------------------------------UPDATE-----------------------------------------------
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form action="updateservlet" method="post">
+            
+            roll : <input type="number" name="roll"/>
+            <br><br>
+            name : <input type="text" name="name"/>
+            <br><br>
+           
+            
+            <br><br>
+            
+            <input type="submit" value="update">
+            <br>
+            <br>
+            
+           
+        </form>
+    </body>
+</html>
+
+
+-------------------------------------------------------INSERT SERVLET-----------------------------------------------------------
+
+ String roll = request.getParameter("roll");
+        String name = request.getParameter("name");
+        String course = request.getParameter("course");
+        String gender = request.getParameter("gender");
+        
+        try{
+            String url="jdbc:mysql://localhost:3306/mataji";
+            String user = "root";
+            String password = "";
+            
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(url,user,password);
+            PrintWriter pw = response.getWriter();
+            
+            PreparedStatement ps = con.prepareStatement("INSERT INTO student(roll,name,course,gender) VALUES(?,?,?,?)");
+            ps.setString(1, roll);
+            ps.setString(2, name);
+            ps.setString(3, course);
+            ps.setString(4, gender);
+            
+            int row = ps.executeUpdate();
+            if(row > 0){
+                response.sendRedirect("display");
+            }
+            else{
+                pw.print("error");
+            }
+            
+            
+        }catch(Exception e){
+            
+        }
+
+-------------------------------------------------------UDATE-----------------------------------------------------------------------------
+
+String roll = request.getParameter("roll");
+        String name = request.getParameter("name"); 
+        
+        
+        try{
+            String url="jdbc:mysql://localhost:3306/mataji";
+            String user = "root";
+            String password = "";
+            
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(url,user,password);
+            PrintWriter pw = response.getWriter();
+            
+            PreparedStatement ps = con.prepareStatement("UPDATE student SET name=? WHERE roll=?");
+            ps.setString(1, name);
+            ps.setString(2, roll);
+            
+            ps.executeUpdate();
+            response.sendRedirect("display");
+          
+            
+            
+        }catch(Exception e){
+            
+        }
+
+-------------------------------------------------------------DELETE-----------------------------------------------------------------
+
+    
+        String roll = request.getParameter("roll");
+  
+        try{
+            String url="jdbc:mysql://localhost:3306/mataji";
+            String user = "root";
+            String password = "";
+            
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(url,user,password);
+            PrintWriter pw = response.getWriter();
+            
+            PreparedStatement ps = con.prepareStatement("DELETE FROM student WHERE roll=?");
+            ps.setString(1, roll);
+            
+            int row = ps.executeUpdate();
+            if(row > 0){
+                response.sendRedirect("display");
+            }
+            else{
+                pw.print("error");
+            }
+            
+            
+        }catch(Exception e){
+            
+    }
+
+--------------------------------------------------DISPLAY----------------------------------------------------------------------------
+   
+        try{
+            String url="jdbc:mysql://localhost:3306/mataji";
+            String user = "root";
+            String password = "";
+            
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(url,user,password);
+            PrintWriter pw = response.getWriter();
+            
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM student");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                pw.print("---------------------------------------------");
+                pw.print("roll =>" + rs.getString("roll"));
+                pw.print("name =>" + rs.getString("name"));
+                pw.print("course =>" + rs.getString("course"));
+                pw.print("gender =>" + rs.getString("gender"));
+            }
+            
+            
+            
+        }catch(Exception e){
+            
+    }

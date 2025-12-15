@@ -1,0 +1,79 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package udpclient;
+
+/**
+ *
+ * @author rajan
+ */
+import java.net.*;
+import java.io.*;
+import java.util.*;
+
+public class UDPClient {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) throws Exception{
+        
+        DatagramSocket ds = new DatagramSocket();
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the number");
+        String num = sc.nextLine();
+        
+        byte[] b = num.getBytes();
+        InetAddress ip = InetAddress.getByName("localhost");
+        DatagramPacket dp = new DatagramPacket(b, b.length,ip,4000);
+        ds.send(dp);
+        
+        byte[] buf = new byte[1024];
+        DatagramPacket dp1 = new DatagramPacket(buf, buf.length);
+        ds.receive(dp1);
+        System.out.println("number =>"+new String(dp1.getData(),0,dp1.getLength()));
+        ds.close();
+    }
+    
+}
+
+--------------------------------------------------------------------------------------------
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package udpclient;
+
+/**
+ *
+ * @author rajan
+ */
+import java.net.*;
+import java.io.*;
+import java.util.*;
+
+public class UDPServer {
+    public static void main(String[] argc)throws Exception{
+        
+        DatagramSocket ds = new DatagramSocket(4000);
+        byte[] buf = new byte[1024];
+        DatagramPacket dp = new DatagramPacket(buf, buf.length);
+        ds.receive(dp);
+        
+        String msg = new String(dp.getData(),0,dp.getLength());
+        int n = Integer.parseInt(msg);
+        int fact = 1;
+        for(int i = 1; i<=n;i++) fact*=i;
+        
+        String reply = String.valueOf(fact);
+        byte [] sendData = reply.getBytes();
+        InetAddress ip = dp.getAddress();
+        int port = dp.getPort();
+        DatagramPacket dp1 = new DatagramPacket(sendData, sendData.length,ip,port);
+        ds.send(dp1);
+        ds.close();
+    }
+}
