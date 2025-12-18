@@ -1,0 +1,185 @@
+linq html
+
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WebForm1.aspx.cs" Inherits="WebApplication5.WebForm1" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+</head>
+<body>
+    <form id="form1" runat="server">
+
+    <table>
+        <tr>
+            <td><asp:Label ID="Label1" runat="server" Text="Name"></asp:Label></td>
+            <td><asp:TextBox ID="txtname" runat="server"></asp:TextBox></td>
+        </tr>
+
+        <tr>
+            <td><asp:Label ID="Label2" runat="server" Text="Age"></asp:Label></td>
+            <td><asp:TextBox ID="txtage" runat="server"></asp:TextBox></td>
+        </tr>
+
+        <tr>
+            <td><asp:Label ID="Label3" runat="server" Text="Password"></asp:Label></td>
+            <td><asp:TextBox ID="txtpassword" runat="server" TextMode="Password"></asp:TextBox></td>
+        </tr>
+
+        <tr>
+            <td><asp:Label ID="Label4" runat="server" Text="Course"></asp:Label></td>
+            <td><asp:TextBox ID="txtcourse" runat="server"></asp:TextBox></td>
+        </tr>
+
+        <tr>
+            <td>
+                <asp:Button ID="btnadd" runat="server" Text="Add" OnClick="btnadd_Click" />
+            </td>
+            <td>
+                <asp:Button ID="btndisplay" runat="server" Text="Display" OnClick="btndisplay_Click" />
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <asp:Button ID="btnsearch" runat="server" Text="Search" OnClick="btnsearch_Click" />
+            </td>
+            <td>
+                <asp:Button ID="btncount" runat="server" Text="Count" OnClick="btncount_Click" />
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <asp:Button ID="btnsum" runat="server" Text="Sum" OnClick="btnsum_Click" />
+            </td>
+            <td>
+                <asp:Button ID="btnfirst" runat="server" Text="First" OnClick="btnfirst_Click" />
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <asp:Button ID="btnlast" runat="server" Text="Last" OnClick="btnlast_Click" />
+            </td>
+            <td>
+                <asp:Button ID="btnmin" runat="server" Text="Min" OnClick="btnmin_Click" />
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <asp:Label ID="Label5" runat="server" ForeColor="Blue"></asp:Label>
+            </td>
+        </tr>
+
+    </table>
+
+</form>
+</body>
+</html>
+
+
+-----------------------------------------------------backend--------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace WebApplication5
+{
+    public partial class WebForm1 : System.Web.UI.Page
+    {
+        [Serializable]
+
+        public class student
+        {
+            public string name {  get; set; }
+            public int age { get; set; }
+            public int password { get; set; }
+            public string course { get; set; }
+        }
+
+        private List<student> stud
+        {
+            get
+            {
+                if (ViewState["stud"] == null)
+                    ViewState["stud"] = new List<student>();
+                return (List<student>)ViewState["stud"];
+            }
+        }
+        protected void Page_Load(object sender, EventArgs e)
+        {
+         
+        }
+
+        protected void btnadd_Click(object sender, EventArgs e)
+        {
+            string name1 = txtname.Text;
+            int age1 = int.Parse(txtage.Text);
+            int password1 = int.Parse(txtpassword.Text);
+            string course1 = txtcourse.Text;
+
+            stud.Add(new student { name = name1, age = age1, password = password1, course = course1 });
+
+            Label5.Text = "Add succesfully";
+
+        }
+
+        protected void btndisplay_Click(object sender, EventArgs e)
+        {
+            foreach(var s in stud)
+            {
+                Label5.Text += s.name.ToString() + "<br/>" + 
+                    s.age + "<br/>" + 
+                    s.password + "<br/>" + 
+                    s.course ;
+            }
+        }
+
+        protected void btnsearch_Click(object sender, EventArgs e)
+        {
+            var name = stud
+                .Where(s => s.name.StartsWith("r", StringComparison.OrdinalIgnoreCase))
+                .Select(s => s.name);
+
+            Label5.Text = "This Name Start Withs M like " + string.Join(",",name);
+        }
+
+        protected void btncount_Click(object sender, EventArgs e)
+        {
+            int count = stud.Count();
+
+            Label5.Text = count.ToString();
+        }
+
+        protected void btnsum_Click(object sender, EventArgs e)
+        {
+            int sum = stud.Sum(s => s.age);
+            Label5.Text = sum.ToString();
+        }
+
+        protected void btnfirst_Click(object sender, EventArgs e)
+        {
+            var first = stud.First().name;
+            Label5.Text = first.ToString();
+        }
+
+        protected void btnlast_Click(object sender, EventArgs e)
+        {
+            var last = stud.Last().name;
+            Label5.Text = last.ToString();
+        }
+
+        protected void btnmin_Click(object sender, EventArgs e)
+        {
+            int min = stud.Min(s => s.age);
+            Label5.Text = min.ToString();
+        }
+    }
+}

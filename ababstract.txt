@@ -1,0 +1,95 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace WebApplication13
+{
+    public partial class WebForm3 : System.Web.UI.Page
+    {
+        //private object ddlAccountType;
+        DropDownList ddlAccountType = (DropDownList)FindControl("ddlAccountType");
+        string selected = ddlAccountType.SelectedValue;
+
+        public abstract class BankAccount
+        {
+            public string AccountNumber { get; set; }
+            public decimal Balance { get; set; }
+
+            public BankAccount(string accountNumber, decimal balance)
+            {
+                AccountNumber = accountNumber;
+                Balance = balance;
+            }
+
+            public abstract string Withdraw(decimal amount);
+        }
+
+        public class SavingsAccount : BankAccount
+        {
+            private const decimal MinimumBalance = 5000;
+
+            public SavingsAccount(string accountNumber, decimal balance)
+                : base(accountNumber, balance) { }
+
+            public override string Withdraw(decimal amount)
+            {
+                if (Balance - amount >= MinimumBalance)
+                {
+                    Balance -= amount;
+                    return $"Withdrawal successful. New Balance: {Balance}";
+                }
+                else
+                {
+                    return $"Withdrawal denied. Minimum balance of {MinimumBalance} must be maintained.";
+                }
+            }
+        }
+
+        public class CurrentAccount : BankAccount
+        {
+            public CurrentAccount(string accountNumber, decimal balance)
+                : base(accountNumber, balance) { }
+
+            public override string Withdraw(decimal amount)
+            {
+                Balance -= amount;
+                return $"Withdrawal successful. New Balance: {Balance}";
+            }
+        }
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            string accountType = ddlAccountType.SelectedValue;
+            string accountNumber = txtAccountNumber.Text;
+            decimal initialBalance = Convert.ToDecimal(txtInitialBalance.Text);
+            decimal withdrawAmount = Convert.ToDecimal(txtWithdrawAmount.Text);
+
+            BankAccount account;
+
+            if (accountType == "Savings")
+            {
+                account = new SavingsAccount(accountNumber, initialBalance);
+            }
+            else
+            {
+                account = new CurrentAccount(accountNumber, initialBalance);
+            }
+
+            string result = account.Withdraw(withdrawAmount);
+            lblResult.Text = result;
+        }
+
+        protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
+}

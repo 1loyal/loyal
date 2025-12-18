@@ -1,0 +1,128 @@
+------------------------------------------class---------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace WebApplication7.Models
+{
+    public class emp
+    {
+        public int id {  get; set; }
+        public string name { get; set; }
+       
+        public int age { get; set; }
+
+        public string gender { get; set; }
+
+        public string city { get; set; }
+
+        public string course { get; set; }
+    }
+}
+
+---------------------------student_view------------
+
+@{
+    ViewBag.Title = "Emp";
+}
+
+@model WebApplication7.Models.emp
+
+<h2>Emp</h2>
+
+@using (Html.BeginForm())
+{
+    <p>id:@Html.TextBoxFor(e => e.id)</p>
+    <p>name:@Html.TextBoxFor(e => e.name)</p>
+    <p>age:@Html.TextBoxFor(e => e.age)</p>
+
+    <p>
+        gender:
+        @Html.RadioButtonFor(e => e.gender, "Male")male
+        @Html.RadioButtonFor(e => e.gender, "Female")Female
+
+
+    </p>
+
+    <p>
+        city:
+        @Html.DropDownListFor(e =>e.city,
+        new MultiSelectList(new[] { "surat","vapi"}))
+    </p>
+
+    <p>
+       course:
+        @Html.ListBoxFor(e=>e.course,
+       new MultiSelectList(new[] {"MCA","MBA","BBA","BCA"}))
+    </p>
+
+    <br />
+    <br />
+
+    <input type="submit" value="submit" />
+}
+
+-----------------------------Emp_details--------------------------
+
+
+@{
+    ViewBag.Title = "Emp_details";
+}
+
+@model WebApplication7.Models.emp
+
+<h2>Emp_details</h2>
+
+<p><b>id</b>@Model.id</p>
+<p><b>Name</b>@Model.name</p>
+<p><b>age</b>@Model.age</p>
+<p><b>gender</b>@Model.gender</p>
+<p><b>city</b>@Model.city</p>
+<p><b>course</b>@Model.course</p>
+
+
+------------------------------homec0ntroller----------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using WebApplication7.Models;
+
+namespace WebApplication7.Controllers
+{
+    public class HomeController : Controller
+    {
+        public ActionResult Index()
+        {
+            return View();
+        }
+        [HttpGet]
+        public ActionResult Emp()
+        {
+            return View();
+        }
+        [HttpPost]
+
+        public ActionResult Emp(emp e)
+        {
+            return View("Emp_details",e);
+        }
+        public ActionResult About()
+        {
+            ViewBag.Message = "Your application description page.";
+
+            return View();
+        }
+
+        public ActionResult Contact()
+        {
+            ViewBag.Message = "Your contact page.";
+
+            return View();
+        }
+    }
+}

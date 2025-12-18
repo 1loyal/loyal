@@ -1,0 +1,121 @@
+----------------------------------site1,master-----------------------------------------------
+
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site1.master.cs" Inherits="WebApplication9.Site1" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+            <h1>
+                LOGIN FORM
+            </h1>
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+
+            <footer>
+                <p>rajan@gmail.com</p>
+            </footer>
+        </div>
+    </form>
+</body>
+</html>
+
+-------------------------------------------------------LOGIN.aspx------------------------------------------
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site1.Master" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="WebApplication9.Login" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+
+  
+
+    <h3>Login</h3>
+
+    Username:
+    <asp:TextBox ID="txtUser" runat="server" /><br /><br />
+
+    Password:
+    <asp:TextBox ID="txtPass" runat="server" TextMode="Password" /><br /><br />
+
+    <asp:Button ID="btnLogin" runat="server" Text="Login" OnClick="btnLogin_Click"  />
+
+    <br />
+    <asp:Label ID="lblMsg" runat="server" ForeColor="Red"></asp:Label>
+
+
+
+</asp:Content>
+
+
+-------------------------------------------login.aspx.cs---------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace WebApplication9
+{
+    public partial class Login : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            //if (Session["username"] != null)
+            //{
+            //    lblMsg.Text = "welcome";
+                
+            //}
+        }
+
+        protected void btnLogin_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Session["username"] = txtUser.Text;
+            Response.Redirect("home.aspx");
+        }
+    }
+}
+------------------------------------------------------------newwebform------------------------
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site1.Master" AutoEventWireup="true" CodeBehind="home.aspx.cs" Inherits="WebApplication9.home" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+     <h2>Home Page</h2>
+    <asp:Label ID="lblPrint" runat="server" Text="Label"></asp:Label>
+    <p>You are successfully logged in.</p>
+</asp:Content>
+
+
+------------------------------------------------aspxd-------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace WebApplication9
+{
+    public partial class home : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (Session["username"] == null)
+            {
+                Response.Redirect("Login.aspx");
+            }
+            else
+            {
+                lblPrint.Text = "Welcome " + Session["username"];
+            }
+        }
+    }
+}

@@ -1,0 +1,67 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace WebApplication11
+{
+    public partial class WebForm1 : System.Web.UI.Page
+    {
+        public class vehical
+        {
+            public string type, name;
+
+            public vehical() { }
+            public vehical(string type,string name) 
+            {
+                this.type = type;
+                this.name = name;
+            }
+
+            public string Display()
+            {
+                return type + " " + name;
+            }
+        }
+
+        public class car : vehical
+        {
+            public string name,model;
+            public int year;
+            public double price;
+
+            public car() { }
+            public car(string n, string m,int yr,double pr)
+            {
+                this.name =n; 
+                this.model = m;
+                this.year = yr;
+                this.price = pr;
+            }
+
+            public string Display()
+            {
+                string ans= "Name : " + name + " Model : " + model + " Year : " + year + " Price : " + price;
+                return ans;
+            }
+        }
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+        }
+        protected void btnprint_Click(object sender, EventArgs e)
+        {
+            //vehical v = new vehical("Maruti","Swift DZire");
+            string name = txtname.Text;
+            string model = txtmodel.Text;
+            int year = int.Parse(txtyear.Text);
+            double price = int.Parse(txtprice.Text);
+            car c = new car(name,model,year, price);
+            string car = c.Display();
+            //string l = v.Display();
+            lblans.Text=car;
+        }
+    }
+}
